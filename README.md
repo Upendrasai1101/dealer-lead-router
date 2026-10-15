@@ -1,143 +1,186 @@
 Kandi
 
-# PuREPower Dealer Lead Router
+<p align="center">
+  <img src="banner.svg" alt="PuREPower Dealer Lead Router" width="100%" />
+</p>
 
-A practical assignment submission for the MIS Assistant role at PURE Energy.
-Builds a small lead-capture web app that routes customer leads to the right
-dealer by pincode, plus a one-time script that cleans up the old
-`legacy_leads.csv` export and imports it into the same database.
+<p align="center">
+  A lead-capture app that routes every customer lead to the dealer who covers its pincode,<br />
+  plus a script that cleans the old <code>legacy_leads.csv</code> export and imports it into the same database.
+</p>
 
-## What's in this project
+<p align="center">
+  <a href="#what-it-does">What it does</a> ·
+  <a href="#how-to-run-it">Run it</a> ·
+  <a href="#how-dealer-assignment-works">Dealer assignment</a> ·
+  <a href="#data-problems-found-in-legacy_leadscsv">Data problems</a> ·
+  <a href="#assumptions">Assumptions</a>
+</p>
+
+---
+
+Practical assignment for the **MIS Assistant** role at PURE Energy.
+
+## What it does
+
+| Part | What was built |
+|---|---|
+| **A. Lead app** | A form that validates name, mobile, pincode, product and source, blocks a mobile number that is already saved, assigns the dealer by pincode, and saves the lead to Firestore. A dashboard shows live counts by status and dealer, with a filter and an inline status editor. |
+| **B. Data cleanup** | `scripts/clean-and-import.js` reads all 40 legacy rows, fixes what can be fixed safely, rejects what can't, and writes `reports/reconciliation.csv` with one line per decision. It then imports the dealers and cleaned leads into Firestore. |
+| **C. AI log** | `AI_LOG.md` records which AI tools were used, the three most useful prompts, and a time the AI was wrong. |
+| **D. Next steps** | `NOTE.md` describes what I would build next for PURE Energy's dealers. |
+
+**Built with:** HTML, CSS and JavaScript (no build step), Firebase Firestore, Firebase Hosting, and Node.js for the import script.
+
+## Project layout
 
 ```
-public/                  Part A - the web app (deploy this to Firebase Hosting)
+public/                  The web app (this folder is what gets deployed)
   index.html             "New Lead" form
-  dashboard.html         Dashboard: counts by dealer/status, editable lead status
-  firebase-init.js        <- fill in your Firebase project config here
-  app.js                 form validation + save-to-Firestore logic
-  dashboard.js           live lead list + status updates
-  dealer-assign.js       the pincode -> dealer matching rule (shared logic)
-  validate.js            phone/pincode/name validation helpers
+  dashboard.html         Dashboard: counts by dealer and status, editable status
+  firebase-init.js       Firebase project config
+  app.js                 Form validation and save-to-Firestore logic
+  dashboard.js           Live lead list and status updates
+  dealer-assign.js       The pincode -> dealer matching rule
+  validate.js            Phone, pincode and name checks
   style.css
 
 scripts/
-  clean-and-import.js    Part B - cleans data/legacy_leads.csv and imports it
+  clean-and-import.js    Cleans data/legacy_leads.csv and imports it
 
 data/
-  dealers.csv            source data (unchanged)
-  legacy_leads.csv        source data (unchanged)
+  dealers.csv            Source data (unchanged)
+  legacy_leads.csv       Source data (unchanged)
 
 reports/
-  reconciliation.csv     output of the cleaning script (lead_id, action, reason)
+  reconciliation.csv     Output of the cleaning script: lead_id, action, reason
 
 firestore.rules          Firestore Security Rules
 firebase.json            Firebase Hosting config
-AI_LOG.md                Part C - how AI tools were used while building this
-NOTE.md                  Part D - what I'd build next for PURE Energy's dealers
+banner.svg               README banner
+AI_LOG.md                Part C
+NOTE.md                  Part D
 submission.json
 ```
 
-## How to run this locally
+## How to run it
 
-1. **Install Node.js** (v18+) if you don't have it, then from the project
-   folder:
+1. **Install Node.js** (v18 or newer), then in the project folder:
    ```
    npm install
    ```
 
-2. **Create a Firebase project** (free, no credit card):
-   - Go to https://console.firebase.google.com -> Add project.
-   - Inside the project: Build -> Firestore Database -> Create database
-     (any region close to India is fine; start in production mode, the
-     rules in `firestore.rules` handle access).
-   - Still in the console: click the `</>` (web) icon to register a web
-     app. It will show you a `firebaseConfig` object.
-   - Open `public/firebase-init.js` and paste your real values in place
-     of the `REPLACE_WITH_...` placeholders.
+2. **Create a Firebase project** (free plan, no credit card):
+   - Go to https://console.firebase.google.com and choose Add project.
+   - Build -> Firestore Database -> Create database (a region close to India
+     is fine; start in production mode, the rules in `firestore.rules`
+     control access).
+   - Click the `</>` (web) icon to register a web app. It shows a
+     `firebaseConfig` object.
+   - Paste those values into `public/firebase-init.js`, replacing the
+     `REPLACE_WITH_...` placeholders.
 
-3. **Get a service account key** (only needed to run the import script,
-   not to run the website):
-   - Firebase console -> Project Settings (gear icon) -> Service Accounts
-     -> Generate new private key.
-   - Save the downloaded file as `service-account-key.json` in the
-     project root (same folder as this README). It is already listed in
-     `.gitignore` so it will never be committed.
+3. **Publish the security rules.** Copy `firestore.rules` into Firestore
+   Database -> Rules -> Publish (or deploy them in step 6).
 
-4. **Clean and import the legacy data:**
+4. **Get a service account key** (only the import script needs this, the
+   website does not):
+   - Firebase console -> Project settings -> Service accounts ->
+     Generate new private key.
+   - Save the file as `service-account-key.json` in the project root. It is
+     listed in `.gitignore`, so it is never committed. Delete the key from
+     the Google Cloud console once the import is done.
+
+5. **Clean and import the legacy data:**
    ```
    npm run clean-and-import
    ```
-   This writes `reports/reconciliation.csv` and (if the service account
-   key is present) uploads the `dealers` and cleaned `leads` collections
-   to Firestore. Without the key, it still cleans the data and writes the
-   report, so the logic can be checked before any Firebase project exists.
+   This writes `reports/reconciliation.csv`. If the service account key is
+   present it also uploads the `dealers` and `leads` collections. Without the
+   key it runs as a dry run: the data is cleaned and the report is written,
+   but nothing is uploaded.
 
-5. **Run the website locally.** The site is plain static HTML/JS (no
-   build step), so any static file server works, e.g.:
+6. **Run the site locally:**
    ```
-   npx firebase-tools emulators:start --only hosting
+   npx http-server public -c-1 -o
    ```
-   or simply open `public/index.html` directly in a browser (Firestore
-   calls still work over the network once `firebase-init.js` has real
-   config values).
+   The `-c-1` flag turns off caching so changes show up on refresh.
 
-6. **Deploy for real:**
+7. **Deploy:**
    ```
    npx firebase-tools login
-   npx firebase-tools use --add        (pick your Firebase project)
-   npx firebase-tools deploy --only hosting,firestore:rules
+   npx firebase-tools deploy --only hosting,firestore:rules --project <your-project-id>
    ```
 
 ## How dealer assignment works
 
 Each dealer in `dealers.csv` covers one or more 3-digit pincode prefixes
-(e.g. Vizag Home Power covers `530` and `531`). A new lead's pincode is
-matched against those prefixes; if nothing matches, the lead is routed to
-"In-house Sales" instead of being left unassigned. The exact same rule is
-implemented twice on purpose - once in `public/dealer-assign.js` for the
-live web form, once inside `scripts/clean-and-import.js` for the legacy
-import - because one runs in the browser and one runs in Node.js, and
-this project has no shared build step between them. Both must stay in
-sync if the rule ever changes.
+(for example, Vizag Home Power covers `530` and `531`). A new lead's
+pincode is matched against those prefixes. If nothing matches, the lead goes
+to **In-house Sales** instead of being left unassigned.
 
-## Known data problems found in legacy_leads.csv, and how they were handled
+| Pincode | Prefix | Dealer |
+|---|---|---|
+| 502319 | 502 | Kandi Energy Point |
+| 531001 | 531 | Vizag Home Power |
+| 520010 | 520 | Krishna Energy Store |
+| 110001 | 110 | No dealer covers it, so In-house Sales |
 
-These were found by actually reading all 40 rows, not guessed at:
+The same rule is written twice on purpose: once in `public/dealer-assign.js`
+for the web form, once inside `scripts/clean-and-import.js` for the import.
+One runs in the browser and the other in Node.js, and this project has no
+shared build step between them. If the rule changes, change both.
+
+## Security rules
+
+`firestore.rules` allows:
+
+- **dealers**: read only.
+- **leads**: anyone can read; a lead can be created only if it has all the
+  required fields, a valid 10-digit mobile number, a 6-digit pincode and a
+  valid status; the only field that can be updated is `status`; deleting is
+  not allowed.
+
+## Data problems found in legacy_leads.csv
+
+These came from reading all 40 rows, not from guessing:
 
 | Problem | Example | How it's handled |
 |---|---|---|
 | Inconsistent phone formats | `"98480 22 431"`, `"+91-9000012345"` | Stripped to a plain 10-digit number |
-| Invalid/too-short phone | `"12345"` (L1009) | Row **rejected** - can't be fixed without contacting the customer |
-| Invalid pincode (4 digits) | `"5000"` (L1012) | Row **rejected** - guessing the missing 2 digits risks routing a real customer to the wrong dealer |
-| Duplicate customers (same phone, different lead_id) | Suresh Reddy, Prakash N, Sridevi P, Satish P all appear twice | Treated as **one lead per phone number**, matching the duplicate-mobile rule the live form also enforces. The later duplicate is **merged** into the first one; it is not imported as a second record |
-| Reused lead_id (`L1033` used for two different rows) | `L1033` = Mohan Rao, then later `L1033` = Kiran Kumar | The second `L1033` row is actually an exact duplicate of `L1013` (same name, phone, pincode, product, date) - it gets caught and **merged** into `L1013` by the phone-number rule above, so the ID collision resolves itself. As a safety net, the script also detects a true lead_id collision in general (same ID, genuinely different person) and would reassign a new ID like `L1033-DUP` with a `fixed` action and a logged reason, in case a future export has one that isn't also a phone duplicate |
-| Missing name | L1026 (name blank) | Row **rejected** - a lead with no name and only a phone number isn't usable as-is |
-| Invalid date | `31/09/2026` (L1018) - September has only 30 days | **Fixed**: clamped to the last real day of that month (`2026-09-30`), and the correction is recorded in the reconciliation report so it's never silently changed without a trace |
-| Inconsistent text casing | `"website"` vs `"Website"`, `"converted "` vs `"Converted"` | Normalized to Title Case, trimmed |
-| Pincode outside any dealer's coverage | `110001` (Delhi) for L1015 | **assigned_inhouse** - routed to "In-house Sales" rather than left unassigned |
+| Invalid or too-short phone | `"12345"` (L1009) | Row **rejected**: it can't be fixed without contacting the customer |
+| Invalid pincode (4 digits) | `"5000"` (L1012) | Row **rejected**: guessing the missing 2 digits risks routing a real customer to the wrong dealer |
+| Duplicate customers (same phone, different lead_id) | Suresh Reddy, Prakash N, Sridevi P, Satish P all appear twice | Treated as **one lead per phone number**, the same rule the live form enforces. The later duplicate is **merged** into the first one and not imported as a second record |
+| Reused lead_id (`L1033` used for two different rows) | `L1033` = Mohan Rao, then later `L1033` = Kiran Kumar | The second `L1033` row is an exact duplicate of `L1013` (same name, phone, pincode, product, date), so the phone rule **merges** it into `L1013` and the ID clash resolves itself. As a safety net, the script also detects a genuine lead_id clash (same ID, different person) and would reassign an ID like `L1033-DUP`, marked `fixed` with the reason logged |
+| Missing name | L1026 (name blank) | Row **rejected**: a lead with only a phone number isn't usable as-is |
+| Invalid date | `31/09/2026` (L1018): September has 30 days | **Fixed** by clamping to the last real day of that month (`2026-09-30`). The correction is recorded in the reconciliation report so it never changes silently |
+| Inconsistent text casing | `"website"` vs `"Website"`, `"converted "` vs `"Converted"` | Trimmed and normalized to Title Case |
+| Pincode outside any dealer's coverage | `110001` (Delhi) for L1015 | **assigned_inhouse**: routed to In-house Sales |
 
-### Known issue we did NOT auto-fix
+**Result for the 40 rows:** 13 imported as they were, 18 fixed, 3 rejected,
+1 assigned to In-house Sales, and 5 merged. That leaves **32 leads** in
+Firestore (40 minus 3 rejected minus 5 merged).
 
-`L1023` has product `"Pure power 5 kwh"` instead of the standard
-`"PuREPower Home 5kWh"`. This looks like a typo for the Home 5kWh product,
-but guessing and silently rewriting it risks putting a real customer on
-the wrong product record. This row is still imported (phone, pincode,
-name etc. are all valid) but the product field is left exactly as
-written, so a human can review and correct it - the goal of this cleaning
-script is to fix formatting problems, not to guess intent.
+### One issue that was not auto-fixed
 
-## Assumptions made
+`L1023` has the product `"Pure power 5 kwh"` instead of the standard
+`"PuREPower Home 5kWh"`. It looks like a typo for the Home 5kWh product, but
+rewriting it silently could put a real customer on the wrong product record.
+The row is still imported, since its phone, pincode and name are valid, and
+the product is left exactly as written so a person can review it. The script
+fixes formatting problems. It does not guess intent.
 
-- "Duplicate lead" = same phone number. A customer can only have one lead
-  record; if they get in touch again under a different lead_id or a
-  typo'd name, it's merged rather than treated as a new customer.
-- A pincode is only checked for being 6 digits, not checked against a
-  real postal-code database (no such database was provided).
-- There is no login system in this assignment's scope, so the dashboard
-  is reachable by anyone with the link, same as the lead form. In a real
-  deployment this would sit behind Firebase Authentication restricted to
-  PURE Energy staff - noted here rather than built, to stay inside the
+## Assumptions
+
+- **Duplicate lead** means the same phone number. A customer has one lead
+  record. If they get in touch again under a different lead_id or a
+  misspelled name, it is merged and not treated as a new customer.
+- A pincode is only checked for being 6 digits. It is not checked against a
+  real postal-code database, because none was provided.
+- There is no login in this assignment's scope, so the dashboard is
+  reachable by anyone with the link, the same as the lead form. In a real
+  deployment it would sit behind Firebase Authentication limited to PURE
+  Energy staff. That is noted here and not built, to stay inside the
   assignment's scope and timeline.
-- No AI features were added to the product itself (the assignment asks
-  only to document AI tool usage in `AI_LOG.md`, Part C - not to build AI
-  into the app).
+- No AI features were added to the product itself. The assignment asks only
+  that AI tool usage be documented in `AI_LOG.md` (Part C).
