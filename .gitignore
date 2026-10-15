@@ -1,0 +1,18 @@
+# Firebase / Google Cloud credentials - NEVER commit these.
+service-account-key.json
+*.serviceaccount.json
+.env
+.env.*
+
+# Dependencies
+node_modules/
+
+# Firebase local tooling
+.firebase/
+firebase-debug.log
+firestore-debug.log
+ui-debug.log
+
+# OS / editor noise
+.DS_Store
+.vscode/
