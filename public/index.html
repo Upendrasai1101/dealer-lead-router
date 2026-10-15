@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PuREPower - New Lead</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=Sora:wght@600;700&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="index.html">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="#fff"><path d="M13.5 2 5 13.5h5.5L9.5 22 19 9.5h-5.8L13.5 2Z" /></svg>
+      </span>
+      <span class="brand-name">PuREPower<span class="brand-sub">Dealer Lead Router</span></span>
+    </a>
+    <nav>
+      <a href="index.html" aria-current="page">New Lead</a>
+      <a href="dashboard.html">Dashboard</a>
+    </nav>
+  </header>
+
+  <main class="split">
+    <aside class="hero">
+      <h2>Every lead goes to the dealer who covers its pincode.</h2>
+      <p>
+        Enter the customer's details once. The first three digits of the
+        pincode decide the dealer, and the lead is saved straight away.
+      </p>
+
+      <p class="hero-label">How pincodes are routed</p>
+      <ul class="route">
+        <li><span class="dot"></span><span class="pin">502319</span><span class="to">goes to</span>Kandi Energy Point</li>
+        <li><span class="dot"></span><span class="pin">531001</span><span class="to">goes to</span>Vizag Home Power</li>
+        <li><span class="dot"></span><span class="pin">520010</span><span class="to">goes to</span>Krishna Energy Store</li>
+        <li><span class="dot"></span><span class="pin">No match</span><span class="to">goes to</span>In-house Sales</li>
+      </ul>
+
+      <p class="hero-note">A mobile number that is already saved is not added twice.</p>
+    </aside>
+
+    <div class="card">
+      <h2>New lead</h2>
+      <p class="muted">All fields are required.</p>
+
+      <form id="lead-form" novalidate>
+        <label for="name">Customer name</label>
+        <input id="name" name="name" type="text" required />
+        <div class="error-text" id="err-name"></div>
+
+        <label for="phone">Mobile number</label>
+        <input id="phone" name="phone" type="tel" placeholder="10-digit mobile number" required />
+        <div class="error-text" id="err-phone"></div>
+
+        <label for="pincode">Pincode</label>
+        <input id="pincode" name="pincode" type="text" placeholder="6-digit pincode" required />
+        <div class="error-text" id="err-pincode"></div>
+
+        <label for="product">Product</label>
+        <select id="product" name="product" required>
+          <option value="">Select a product</option>
+          <option>PuREPower Home 3kWh</option>
+          <option>PuREPower Home 5kWh</option>
+          <option>PuREPower Commercial 10kWh</option>
+        </select>
+        <div class="error-text" id="err-product"></div>
+
+        <label for="source">Source</label>
+        <select id="source" name="source" required>
+          <option value="">Select a source</option>
+          <option>Website</option>
+          <option>Voice Agent</option>
+          <option>WhatsApp</option>
+          <option>Dealer Walk-in</option>
+        </select>
+        <div class="error-text" id="err-source"></div>
+
+        <button type="submit" class="primary" id="submit-btn">Save Lead</button>
+        <div id="form-status"></div>
+      </form>
+    </div>
+  </main>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>

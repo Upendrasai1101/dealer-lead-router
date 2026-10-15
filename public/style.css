@@ -1,0 +1,522 @@
+/* style.css - PuREPower Dealer Lead Router
+   One shared stylesheet for both pages.
+   Palette: deep navy base, emerald brand, with blue / amber / violet / rose
+   accents used to tell statuses and dealers apart. */
+
+:root {
+  --ink: #0b1b2e;
+  --ink-2: #14305a;
+  --canvas: #eef2f7;
+  --surface: #ffffff;
+  --line: #dce3ec;
+  --text: #14233a;
+  --muted: #5b6b80;
+
+  --brand: #007d5b;
+  --brand-dark: #00684b;
+  --emerald: #00a878;
+  --blue: #2f6bff;
+  --amber: #e89a06;
+  --violet: #7b5cfa;
+  --rose: #e5484d;
+  --cyan: #0ea5c6;
+  --slate: #7b8794;
+
+  --danger: #c0262d;
+  --radius: 14px;
+  --shadow: 0 1px 2px rgba(11, 27, 46, 0.06), 0 8px 24px rgba(11, 27, 46, 0.06);
+
+  --font-display: "Sora", "Segoe UI", system-ui, sans-serif;
+  --font-body: "Figtree", "Segoe UI", system-ui, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.5;
+  background: var(--canvas);
+  color: var(--text);
+}
+
+/* ---------- Header ---------- */
+
+header.topbar {
+  position: relative;
+  background: var(--ink);
+  color: #fff;
+  padding: 14px 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+header.topbar::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--emerald), var(--blue), var(--violet), var(--amber));
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #fff;
+  text-decoration: none;
+}
+
+.brand-mark {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, var(--emerald), var(--blue));
+  display: grid;
+  place-items: center;
+}
+
+.brand-mark svg {
+  width: 20px;
+  height: 20px;
+}
+
+.brand-name {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 17px;
+  letter-spacing: 0.01em;
+  line-height: 1.1;
+}
+
+.brand-sub {
+  display: block;
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 12px;
+  color: #9db0c9;
+  margin-top: 2px;
+}
+
+header.topbar nav {
+  display: flex;
+  gap: 6px;
+}
+
+header.topbar nav a {
+  color: #c5d2e4;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 8px 16px;
+  border-radius: 999px;
+  transition: background 0.15s, color 0.15s;
+}
+
+header.topbar nav a:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+
+header.topbar nav a[aria-current="page"] {
+  background: #fff;
+  color: var(--ink);
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline: 3px solid var(--blue);
+  outline-offset: 2px;
+}
+
+/* ---------- Layout ---------- */
+
+main {
+  max-width: 720px;
+  margin: 36px auto;
+  padding: 0 20px;
+}
+
+main.wide {
+  max-width: 1180px;
+}
+
+main.split {
+  max-width: 1120px;
+  display: grid;
+  grid-template-columns: 5fr 6fr;
+  gap: 28px;
+  align-items: stretch;
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 28px;
+  margin-bottom: 24px;
+  box-shadow: var(--shadow);
+}
+
+main.split .card {
+  margin-bottom: 0;
+}
+
+h2 {
+  font-family: var(--font-display);
+  margin: 0 0 6px;
+  font-size: 22px;
+  line-height: 1.25;
+}
+
+h3.section-title {
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 600;
+  margin: 28px 0 12px;
+  color: var(--muted);
+}
+
+.page-head {
+  margin-bottom: 4px;
+}
+
+.page-head h2 {
+  font-size: 26px;
+}
+
+.muted {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+/* ---------- Form-page hero panel ---------- */
+
+.hero {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius);
+  padding: 36px 32px;
+  color: #fff;
+  background:
+    radial-gradient(420px 260px at 100% 0%, rgba(47, 107, 255, 0.45), transparent 70%),
+    radial-gradient(360px 260px at 0% 100%, rgba(0, 168, 120, 0.4), transparent 70%),
+    linear-gradient(160deg, var(--ink), var(--ink-2));
+  box-shadow: var(--shadow);
+}
+
+.hero h2 {
+  font-size: 28px;
+  line-height: 1.2;
+  margin-bottom: 12px;
+}
+
+.hero p {
+  color: #b9c8dd;
+  margin: 0 0 28px;
+  max-width: 40ch;
+}
+
+.hero-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #9db0c9;
+  margin: 0 0 10px;
+}
+
+.route {
+  list-style: none;
+  margin: 0 0 24px;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+
+.route li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 14px;
+}
+
+.route .pin {
+  font-family: var(--font-display);
+  font-weight: 600;
+  min-width: 64px;
+}
+
+.route .to {
+  color: #8da2bf;
+}
+
+.route .dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex: none;
+}
+
+.route li:nth-child(1) .dot { background: var(--emerald); }
+.route li:nth-child(2) .dot { background: var(--blue); }
+.route li:nth-child(3) .dot { background: var(--amber); }
+.route li:nth-child(4) .dot { background: var(--slate); }
+
+.hero-note {
+  font-size: 13px;
+  color: #9db0c9;
+  margin: 0;
+  max-width: none;
+}
+
+/* ---------- Form ---------- */
+
+label {
+  display: block;
+  font-size: 13px;
+  font-weight: 700;
+  margin: 16px 0 6px;
+  color: var(--text);
+}
+
+input,
+select {
+  width: 100%;
+  padding: 11px 13px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  font-family: inherit;
+  font-size: 15px;
+  color: var(--text);
+  background: #fbfcfe;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+input:hover,
+select:hover {
+  border-color: #b8c4d4;
+}
+
+input:focus,
+select:focus {
+  border-color: var(--blue);
+  background: #fff;
+}
+
+.error-text {
+  color: var(--danger);
+  font-size: 13px;
+  margin-top: 4px;
+  min-height: 6px;
+}
+
+button.primary {
+  margin-top: 22px;
+  width: 100%;
+  background: var(--brand);
+  color: #fff;
+  border: none;
+  padding: 14px 20px;
+  border-radius: 10px;
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+button.primary:hover {
+  background: var(--brand-dark);
+}
+
+button.primary:disabled {
+  background: #8bb8aa;
+  cursor: not-allowed;
+}
+
+#form-status {
+  margin-top: 14px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+#form-status:not(:empty) {
+  padding: 12px 14px;
+  border-radius: 10px;
+}
+
+#form-status.success {
+  color: #065f46;
+  background: #e3f6ee;
+  border: 1px solid #b7e4d1;
+}
+
+#form-status.error {
+  color: var(--danger);
+  background: #fdecec;
+  border: 1px solid #f5c2c4;
+}
+
+/* ---------- Dashboard cards ---------- */
+
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 16px;
+}
+
+.stat-card {
+  position: relative;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 18px 20px;
+  box-shadow: var(--shadow);
+  --accent: var(--blue);
+}
+
+.stat-card::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 4px;
+  border-radius: var(--radius) var(--radius) 0 0;
+  background: var(--accent);
+}
+
+.stat-card .num {
+  font-family: var(--font-display);
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--accent);
+}
+
+.stat-card .label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--muted);
+  margin-top: 6px;
+}
+
+/* Status order is fixed: New, Contacted, Converted, Lost */
+#status-stats .stat-card:nth-child(1) { --accent: var(--blue); }
+#status-stats .stat-card:nth-child(2) { --accent: var(--amber); }
+#status-stats .stat-card:nth-child(3) { --accent: var(--brand); }
+#status-stats .stat-card:nth-child(4) { --accent: var(--slate); }
+
+/* Dealers cycle through the palette */
+#dealer-stats .stat-card:nth-child(6n + 1) { --accent: var(--emerald); }
+#dealer-stats .stat-card:nth-child(6n + 2) { --accent: var(--violet); }
+#dealer-stats .stat-card:nth-child(6n + 3) { --accent: var(--cyan); }
+#dealer-stats .stat-card:nth-child(6n + 4) { --accent: var(--rose); }
+#dealer-stats .stat-card:nth-child(6n + 5) { --accent: var(--amber); }
+#dealer-stats .stat-card:nth-child(6n + 6) { --accent: var(--blue); }
+
+#dealer-stats .stat-card .num {
+  font-size: 26px;
+}
+
+/* ---------- Leads table ---------- */
+
+.leads-card {
+  margin-top: 28px;
+}
+
+.filters {
+  display: flex;
+  gap: 12px;
+  margin: 14px 0 18px;
+  flex-wrap: wrap;
+}
+
+.filters select {
+  width: auto;
+  min-width: 190px;
+}
+
+.table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+th,
+td {
+  text-align: left;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--line);
+  white-space: nowrap;
+}
+
+th {
+  background: #f4f7fb;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+tbody tr:last-child td {
+  border-bottom: none;
+}
+
+tbody tr:hover {
+  background: #f7faff;
+}
+
+.status-select {
+  width: auto;
+  min-width: 130px;
+  padding: 7px 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* ---------- Small screens ---------- */
+
+@media (max-width: 860px) {
+  main.split {
+    grid-template-columns: 1fr;
+  }
+
+  .hero {
+    padding: 28px 24px;
+  }
+}
+
+@media (max-width: 560px) {
+  header.topbar {
+    padding: 12px 16px;
+  }
+
+  main {
+    margin: 24px auto;
+    padding: 0 16px;
+  }
+
+  .card {
+    padding: 20px;
+  }
+}
