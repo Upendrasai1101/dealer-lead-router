@@ -1,0 +1,98 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="340" viewBox="0 0 1200 340" role="img" aria-labelledby="t d">
+  <title id="t">PuREPower Dealer Lead Router</title>
+  <desc id="d">A lead travels from the lead form to the dealer that covers its pincode.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0b1b2e" />
+      <stop offset="1" stop-color="#14305a" />
+    </linearGradient>
+    <linearGradient id="bar" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#00a878" />
+      <stop offset="0.35" stop-color="#2f6bff" />
+      <stop offset="0.7" stop-color="#7b5cfa" />
+      <stop offset="1" stop-color="#e89a06" />
+    </linearGradient>
+    <radialGradient id="glowB" cx="0.85" cy="0.1" r="0.5">
+      <stop offset="0" stop-color="#2f6bff" stop-opacity="0.45" />
+      <stop offset="1" stop-color="#2f6bff" stop-opacity="0" />
+    </radialGradient>
+    <radialGradient id="glowG" cx="0.05" cy="1" r="0.5">
+      <stop offset="0" stop-color="#00a878" stop-opacity="0.4" />
+      <stop offset="1" stop-color="#00a878" stop-opacity="0" />
+    </radialGradient>
+    <linearGradient id="mark" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#00a878" />
+      <stop offset="1" stop-color="#2f6bff" />
+    </linearGradient>
+  </defs>
+
+  <rect width="1200" height="340" rx="18" fill="url(#bg)" />
+  <rect width="1200" height="340" rx="18" fill="url(#glowB)" />
+  <rect width="1200" height="340" rx="18" fill="url(#glowG)" />
+  <rect x="0" y="334" width="1200" height="6" fill="url(#bar)" />
+
+  <!-- brand mark -->
+  <rect x="60" y="58" width="52" height="52" rx="14" fill="url(#mark)" />
+  <path d="M89 68 74 90h10l-3 16 17-24H88l1-14Z" fill="#fff" />
+
+  <g font-family="Segoe UI, Helvetica, Arial, sans-serif" fill="#fff">
+    <text x="60" y="176" font-size="52" font-weight="700">PuREPower</text>
+    <text x="60" y="224" font-size="34" font-weight="600" fill="#cfe0f5">Dealer Lead Router</text>
+    <text x="60" y="262" font-size="18" fill="#9db0c9">Pincode-based dealer assignment, a live dashboard, and legacy data cleanup.</text>
+  </g>
+
+  <!-- status pills -->
+  <g font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="15" font-weight="600" fill="#fff" text-anchor="middle">
+    <rect x="60" y="282" width="74" height="30" rx="15" fill="#2f6bff" />
+    <text x="97" y="302">New</text>
+    <rect x="144" y="282" width="102" height="30" rx="15" fill="#e89a06" />
+    <text x="195" y="302">Contacted</text>
+    <rect x="256" y="282" width="102" height="30" rx="15" fill="#007d5b" />
+    <text x="307" y="302">Converted</text>
+    <rect x="368" y="282" width="70" height="30" rx="15" fill="#7b8794" />
+    <text x="403" y="302">Lost</text>
+  </g>
+
+  <!-- routing diagram -->
+  <g>
+    <path id="p1" d="M770 170 C 880 170, 900 70, 1010 70" fill="none" stroke="#3a5378" stroke-width="2" />
+    <path id="p2" d="M770 170 C 880 170, 900 135, 1010 135" fill="none" stroke="#3a5378" stroke-width="2" />
+    <path id="p3" d="M770 170 C 880 170, 900 205, 1010 205" fill="none" stroke="#3a5378" stroke-width="2" />
+    <path id="p4" d="M770 170 C 880 170, 900 270, 1010 270" fill="none" stroke="#3a5378" stroke-width="2" />
+
+    <!-- source -->
+    <circle cx="740" cy="170" r="34" fill="#0b1b2e" stroke="#7aa2ff" stroke-width="2" />
+    <text x="740" y="166" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="13" font-weight="700" fill="#fff" text-anchor="middle">New</text>
+    <text x="740" y="182" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="13" font-weight="700" fill="#fff" text-anchor="middle">lead</text>
+
+    <!-- dealers -->
+    <g font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="16" font-weight="600" fill="#fff">
+      <circle cx="1020" cy="70" r="11" fill="#00a878" />
+      <text x="1042" y="76">Kandi</text>
+      <circle cx="1020" cy="135" r="11" fill="#2f6bff" />
+      <text x="1042" y="141">Vizag</text>
+      <circle cx="1020" cy="205" r="11" fill="#e89a06" />
+      <text x="1042" y="211">Krishna</text>
+      <circle cx="1020" cy="270" r="11" fill="#7b8794" />
+      <text x="1042" y="276">In-house</text>
+    </g>
+
+    <!-- travelling leads -->
+    <circle r="7" fill="#00a878">
+      <animateMotion dur="3.2s" begin="0s" repeatCount="indefinite" keyPoints="0;1;1" keyTimes="0;0.6;1" calcMode="linear"><mpath href="#p1" /></animateMotion>
+      <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.05;0.58;0.62" dur="3.2s" begin="0s" repeatCount="indefinite" />
+    </circle>
+    <circle r="7" fill="#2f6bff">
+      <animateMotion dur="3.2s" begin="0.8s" repeatCount="indefinite" keyPoints="0;1;1" keyTimes="0;0.6;1" calcMode="linear"><mpath href="#p2" /></animateMotion>
+      <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.05;0.58;0.62" dur="3.2s" begin="0.8s" repeatCount="indefinite" />
+    </circle>
+    <circle r="7" fill="#e89a06">
+      <animateMotion dur="3.2s" begin="1.6s" repeatCount="indefinite" keyPoints="0;1;1" keyTimes="0;0.6;1" calcMode="linear"><mpath href="#p3" /></animateMotion>
+      <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.05;0.58;0.62" dur="3.2s" begin="1.6s" repeatCount="indefinite" />
+    </circle>
+    <circle r="7" fill="#9aa5b1">
+      <animateMotion dur="3.2s" begin="2.4s" repeatCount="indefinite" keyPoints="0;1;1" keyTimes="0;0.6;1" calcMode="linear"><mpath href="#p4" /></animateMotion>
+      <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.05;0.58;0.62" dur="3.2s" begin="2.4s" repeatCount="indefinite" />
+    </circle>
+  </g>
+</svg>
