@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PuREPower - New Lead</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <h1>PuREPower Dealer Lead Router</h1>
+    <nav>
+      <a href="index.html">New Lead</a>
+      <a href="dashboard.html">Dashboard</a>
+    </nav>
+  </header>
+
+  <main>
+    <div class="card">
+      <h2>New Lead</h2>
+      <p class="muted">
+        Enter a customer's details. The lead is saved to Firestore and
+        automatically routed to the right dealer based on pincode.
+      </p>
+
+      <form id="lead-form" novalidate>
+        <label for="name">Customer name</label>
+        <input id="name" name="name" type="text" required />
+        <div class="error-text" id="err-name"></div>
+
+        <label for="phone">Mobile number</label>
+        <input id="phone" name="phone" type="tel" placeholder="10-digit mobile number" required />
+        <div class="error-text" id="err-phone"></div>
+
+        <label for="pincode">Pincode</label>
+        <input id="pincode" name="pincode" type="text" placeholder="6-digit pincode" required />
+        <div class="error-text" id="err-pincode"></div>
+
+        <label for="product">Product</label>
+        <select id="product" name="product" required>
+          <option value="">Select a product</option>
+          <option>PuREPower Home 3kWh</option>
+          <option>PuREPower Home 5kWh</option>
+          <option>PuREPower Commercial 10kWh</option>
+        </select>
+        <div class="error-text" id="err-product"></div>
+
+        <label for="source">Source</label>
+        <select id="source" name="source" required>
+          <option value="">Select a source</option>
+          <option>Website</option>
+          <option>Voice Agent</option>
+          <option>WhatsApp</option>
+          <option>Dealer Walk-in</option>
+        </select>
+        <div class="error-text" id="err-source"></div>
+
+        <button type="submit" class="primary" id="submit-btn">Save Lead</button>
+        <div id="form-status"></div>
+      </form>
+    </div>
+  </main>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>

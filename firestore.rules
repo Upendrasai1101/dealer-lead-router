@@ -1,0 +1,57 @@
+rules_version = '2';
+
+// Firestore Security Rules
+//
+// Plain-language summary (the "lock on the house" from our earlier chat):
+// - Anyone can READ the dealers list (needed so the public lead form can
+//   figure out which dealer a pincode belongs to) but can NEVER write to
+//   it from the browser - dealers are only ever written by the trusted
+//   Node.js import script, which uses the Firebase Admin SDK and a
+//   service-account key, and Admin SDK writes always bypass these rules
+//   entirely (that's a deliberate Firebase design - admin access is for
+//   trusted servers, not the public website).
+// - Anyone can CREATE a lead (it's a public lead-capture form, nobody is
+//   logged in) but the document has to actually look like a real lead:
+//   right fields, right types, a valid-looking phone/pincode/status. This
+//   stops someone from submitting garbage or extra fields straight to
+//   the database by calling the Firestore API directly instead of using
+//   our form.
+// - Anyone can READ leads and UPDATE a lead's status field (the dashboard
+//   needs this, and this assignment has no login system in scope). In a
+//   real production system this dashboard would sit behind Firebase Auth
+//   restricted to PuREPower staff - documented as a known limitation in
+//   README.md.
+// - Nobody can DELETE a lead from the browser. Leads are a business
+//   record; deleting should never be a public action.
+
+function isValidLead(data) {
+  return data.keys().hasAll(
+    ['name', 'phone', 'pincode', 'product', 'source', 'status', 'dealer_id', 'dealer_name']
+  )
+  && data.name is string && data.name.size() > 0
+  && data.phone is string && data.phone.matches('^[6-9][0-9]{9}$')
+  && data.pincode is string && data.pincode.matches('^[0-9]{6}$')
+  && data.status in ['New', 'Contacted', 'Converted', 'Lost'];
+}
+
+function isStatusOnlyUpdate() {
+  return request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status'])
+    && request.resource.data.status in ['New', 'Contacted', 'Converted', 'Lost'];
+}
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    match /dealers/{dealerId} {
+      allow read: if true;
+      allow write: if false; // only the Admin SDK import script may write
+    }
+
+    match /leads/{leadId} {
+      allow read: if true;
+      allow create: if isValidLead(request.resource.data);
+      allow update: if isStatusOnlyUpdate();
+      allow delete: if false;
+    }
+  }
+}

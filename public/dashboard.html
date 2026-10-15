@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PuREPower - Dashboard</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <h1>PuREPower Dealer Lead Router</h1>
+    <nav>
+      <a href="index.html">New Lead</a>
+      <a href="dashboard.html">Dashboard</a>
+    </nav>
+  </header>
+
+  <main class="wide">
+    <div class="stats-row" id="status-stats"></div>
+    <div class="stats-row" id="dealer-stats"></div>
+
+    <div class="card">
+      <h2>All Leads</h2>
+      <div class="filters">
+        <select id="filter-dealer">
+          <option value="">All dealers</option>
+        </select>
+        <select id="filter-status">
+          <option value="">All statuses</option>
+          <option>New</option>
+          <option>Contacted</option>
+          <option>Converted</option>
+          <option>Lost</option>
+        </select>
+      </div>
+      <table id="leads-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Phone</th>
+            <th>Pincode</th>
+            <th>Product</th>
+            <th>Dealer</th>
+            <th>Source</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="leads-tbody">
+          <tr><td colspan="7" class="muted">Loading...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+
+  <script type="module" src="dashboard.js"></script>
+</body>
+</html>
