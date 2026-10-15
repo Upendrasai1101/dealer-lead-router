@@ -169,15 +169,15 @@ These came from reading all 40 rows, not from guessing:
 | Reused lead_id (`L1033` used for two different rows) | `L1033` = Mohan Rao, then later `L1033` = Kiran Kumar | 🔵 The second `L1033` row is an exact duplicate of `L1013` (same name, phone, pincode, product, date), so the phone rule **merges** it into `L1013` and the ID clash resolves itself. As a safety net, the script also detects a genuine lead_id clash (same ID, different person) and would reassign an ID like `L1033-DUP`, marked `fixed` with the reason logged |
 | Missing name | L1026 (name blank) | 🔴 Row **rejected**: a lead with only a phone number isn't usable as-is |
 | Invalid date | `31/09/2026` (L1018): September has 30 days | 🟡 **Fixed** by clamping to the last real day of that month (`2026-09-30`). The correction is recorded in the reconciliation report so it never changes silently |
-| Inconsistent text casing | `"website"` vs `"Website"`, `"converted "` vs `"Converted"` | 🟡 Trimmed and normalized to Title Case |
+| Inconsistent text casing | `"website"` vs `"Website"`, `"converted "` vs `"Converted"` | 🟡 Trimmed and normalized. Status is Title Case; source is matched to the exact spellings the web form uses (`Website`, `Voice Agent`, `WhatsApp`, `Dealer Walk-in`), so `"WhatsApp"` is not turned into `"Whatsapp"` |
 | Pincode outside any dealer's coverage | `110001` (Delhi) for L1015 | 🟣 **assigned_inhouse**: routed to In-house Sales |
 
 **Result for the 40 rows:**
 
 | | Action | Rows |
 |---|---|---|
-| 🟢 | imported as they were | 13 |
-| 🟡 | fixed | 18 |
+| 🟢 | imported as they were | 26 |
+| 🟡 | fixed | 5 |
 | 🟣 | assigned to In-house Sales | 1 |
 | 🔵 | merged into an existing lead | 5 |
 | 🔴 | rejected | 3 |
