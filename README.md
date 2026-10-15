@@ -5,34 +5,41 @@ Kandi
 </p>
 
 <p align="center">
+  <img alt="Firebase Hosting" src="https://img.shields.io/badge/Firebase-Hosting-FFCA28?style=for-the-badge&logo=firebase&logoColor=black" />
+  <img alt="Firestore" src="https://img.shields.io/badge/Cloud-Firestore-4285F4?style=for-the-badge&logo=googlecloud&logoColor=white" />
+  <img alt="JavaScript" src="https://img.shields.io/badge/JavaScript-No_build_step-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black" />
+  <img alt="Node.js" src="https://img.shields.io/badge/Node.js-Import_script-339933?style=for-the-badge&logo=nodedotjs&logoColor=white" />
+</p>
+
+<p align="center">
   A lead-capture app that routes every customer lead to the dealer who covers its pincode,<br />
   plus a script that cleans the old <code>legacy_leads.csv</code> export and imports it into the same database.
 </p>
 
 <p align="center">
-  <a href="#what-it-does">What it does</a> ·
-  <a href="#how-to-run-it">Run it</a> ·
-  <a href="#how-dealer-assignment-works">Dealer assignment</a> ·
-  <a href="#data-problems-found-in-legacy_leadscsv">Data problems</a> ·
-  <a href="#assumptions">Assumptions</a>
+  <a href="#-what-it-does">What it does</a> ·
+  <a href="#-how-to-run-it">Run it</a> ·
+  <a href="#-how-dealer-assignment-works">Dealer assignment</a> ·
+  <a href="#-data-problems-found-in-legacy_leadscsv">Data problems</a> ·
+  <a href="#-assumptions">Assumptions</a>
 </p>
 
 ---
 
 Practical assignment for the **MIS Assistant** role at PURE Energy.
 
-## What it does
+## ⚡ What it does
 
 | Part | What was built |
 |---|---|
-| **A. Lead app** | A form that validates name, mobile, pincode, product and source, blocks a mobile number that is already saved, assigns the dealer by pincode, and saves the lead to Firestore. A dashboard shows live counts by status and dealer, with a filter and an inline status editor. |
-| **B. Data cleanup** | `scripts/clean-and-import.js` reads all 40 legacy rows, fixes what can be fixed safely, rejects what can't, and writes `reports/reconciliation.csv` with one line per decision. It then imports the dealers and cleaned leads into Firestore. |
-| **C. AI log** | `AI_LOG.md` records which AI tools were used, the three most useful prompts, and a time the AI was wrong. |
-| **D. Next steps** | `NOTE.md` describes what I would build next for PURE Energy's dealers. |
+| 🟢 **A. Lead app** | A form that validates name, mobile, pincode, product and source, blocks a mobile number that is already saved, assigns the dealer by pincode, and saves the lead to Firestore. A dashboard shows live counts by status and dealer, with a filter and an inline status editor. |
+| 🔵 **B. Data cleanup** | `scripts/clean-and-import.js` reads all 40 legacy rows, fixes what can be fixed safely, rejects what can't, and writes `reports/reconciliation.csv` with one line per decision. It then imports the dealers and cleaned leads into Firestore. |
+| 🟣 **C. AI log** | `AI_LOG.md` records which AI tools were used, the three most useful prompts, and a time the AI was wrong. |
+| 🟠 **D. Next steps** | `NOTE.md` describes what I would build next for PURE Energy's dealers. |
 
 **Built with:** HTML, CSS and JavaScript (no build step), Firebase Firestore, Firebase Hosting, and Node.js for the import script.
 
-## Project layout
+## 🗂️ Project layout
 
 ```
 public/                  The web app (this folder is what gets deployed)
@@ -63,7 +70,7 @@ NOTE.md                  Part D
 submission.json
 ```
 
-## How to run it
+## 🚀 How to run it
 
 1. **Install Node.js** (v18 or newer), then in the project folder:
    ```
@@ -88,8 +95,11 @@ submission.json
    - Firebase console -> Project settings -> Service accounts ->
      Generate new private key.
    - Save the file as `service-account-key.json` in the project root. It is
-     listed in `.gitignore`, so it is never committed. Delete the key from
-     the Google Cloud console once the import is done.
+     listed in `.gitignore`, so it is never committed.
+
+   > [!IMPORTANT]
+   > Treat this key like a password. Never commit it or share it, and delete
+   > it from the Google Cloud console once the import is done.
 
 5. **Clean and import the legacy data:**
    ```
@@ -104,7 +114,9 @@ submission.json
    ```
    npx http-server public -c-1 -o
    ```
-   The `-c-1` flag turns off caching so changes show up on refresh.
+
+   > [!TIP]
+   > The `-c-1` flag turns off caching, so CSS and JS changes show up on refresh.
 
 7. **Deploy:**
    ```
@@ -112,7 +124,7 @@ submission.json
    npx firebase-tools deploy --only hosting,firestore:rules --project <your-project-id>
    ```
 
-## How dealer assignment works
+## 🧭 How dealer assignment works
 
 Each dealer in `dealers.csv` covers one or more 3-digit pincode prefixes
 (for example, Vizag Home Power covers `530` and `531`). A new lead's
@@ -131,7 +143,10 @@ for the web form, once inside `scripts/clean-and-import.js` for the import.
 One runs in the browser and the other in Node.js, and this project has no
 shared build step between them. If the rule changes, change both.
 
-## Security rules
+> [!NOTE]
+> The routing table above uses real pincodes from `dealers.csv` and `legacy_leads.csv`.
+
+## 🔐 Security rules
 
 `firestore.rules` allows:
 
@@ -141,27 +156,38 @@ shared build step between them. If the rule changes, change both.
   valid status; the only field that can be updated is `status`; deleting is
   not allowed.
 
-## Data problems found in legacy_leads.csv
+## 🧹 Data problems found in legacy_leads.csv
 
 These came from reading all 40 rows, not from guessing:
 
 | Problem | Example | How it's handled |
 |---|---|---|
-| Inconsistent phone formats | `"98480 22 431"`, `"+91-9000012345"` | Stripped to a plain 10-digit number |
-| Invalid or too-short phone | `"12345"` (L1009) | Row **rejected**: it can't be fixed without contacting the customer |
-| Invalid pincode (4 digits) | `"5000"` (L1012) | Row **rejected**: guessing the missing 2 digits risks routing a real customer to the wrong dealer |
-| Duplicate customers (same phone, different lead_id) | Suresh Reddy, Prakash N, Sridevi P, Satish P all appear twice | Treated as **one lead per phone number**, the same rule the live form enforces. The later duplicate is **merged** into the first one and not imported as a second record |
-| Reused lead_id (`L1033` used for two different rows) | `L1033` = Mohan Rao, then later `L1033` = Kiran Kumar | The second `L1033` row is an exact duplicate of `L1013` (same name, phone, pincode, product, date), so the phone rule **merges** it into `L1013` and the ID clash resolves itself. As a safety net, the script also detects a genuine lead_id clash (same ID, different person) and would reassign an ID like `L1033-DUP`, marked `fixed` with the reason logged |
-| Missing name | L1026 (name blank) | Row **rejected**: a lead with only a phone number isn't usable as-is |
-| Invalid date | `31/09/2026` (L1018): September has 30 days | **Fixed** by clamping to the last real day of that month (`2026-09-30`). The correction is recorded in the reconciliation report so it never changes silently |
-| Inconsistent text casing | `"website"` vs `"Website"`, `"converted "` vs `"Converted"` | Trimmed and normalized to Title Case |
-| Pincode outside any dealer's coverage | `110001` (Delhi) for L1015 | **assigned_inhouse**: routed to In-house Sales |
+| Inconsistent phone formats | `"98480 22 431"`, `"+91-9000012345"` | 🟡 Stripped to a plain 10-digit number |
+| Invalid or too-short phone | `"12345"` (L1009) | 🔴 Row **rejected**: it can't be fixed without contacting the customer |
+| Invalid pincode (4 digits) | `"5000"` (L1012) | 🔴 Row **rejected**: guessing the missing 2 digits risks routing a real customer to the wrong dealer |
+| Duplicate customers (same phone, different lead_id) | Suresh Reddy, Prakash N, Sridevi P, Satish P all appear twice | 🔵 Treated as **one lead per phone number**, the same rule the live form enforces. The later duplicate is **merged** into the first one and not imported as a second record |
+| Reused lead_id (`L1033` used for two different rows) | `L1033` = Mohan Rao, then later `L1033` = Kiran Kumar | 🔵 The second `L1033` row is an exact duplicate of `L1013` (same name, phone, pincode, product, date), so the phone rule **merges** it into `L1013` and the ID clash resolves itself. As a safety net, the script also detects a genuine lead_id clash (same ID, different person) and would reassign an ID like `L1033-DUP`, marked `fixed` with the reason logged |
+| Missing name | L1026 (name blank) | 🔴 Row **rejected**: a lead with only a phone number isn't usable as-is |
+| Invalid date | `31/09/2026` (L1018): September has 30 days | 🟡 **Fixed** by clamping to the last real day of that month (`2026-09-30`). The correction is recorded in the reconciliation report so it never changes silently |
+| Inconsistent text casing | `"website"` vs `"Website"`, `"converted "` vs `"Converted"` | 🟡 Trimmed and normalized to Title Case |
+| Pincode outside any dealer's coverage | `110001` (Delhi) for L1015 | 🟣 **assigned_inhouse**: routed to In-house Sales |
 
-**Result for the 40 rows:** 13 imported as they were, 18 fixed, 3 rejected,
-1 assigned to In-house Sales, and 5 merged. That leaves **32 leads** in
-Firestore (40 minus 3 rejected minus 5 merged).
+**Result for the 40 rows:**
 
-### One issue that was not auto-fixed
+| | Action | Rows |
+|---|---|---|
+| 🟢 | imported as they were | 13 |
+| 🟡 | fixed | 18 |
+| 🟣 | assigned to In-house Sales | 1 |
+| 🔵 | merged into an existing lead | 5 |
+| 🔴 | rejected | 3 |
+
+That leaves **32 leads** in Firestore (40 minus 3 rejected minus 5 merged).
+
+### 🟠 One issue that was not auto-fixed
+
+> [!WARNING]
+> Needs a human review: lead `L1023`.
 
 `L1023` has the product `"Pure power 5 kwh"` instead of the standard
 `"PuREPower Home 5kWh"`. It looks like a typo for the Home 5kWh product, but
@@ -170,7 +196,7 @@ The row is still imported, since its phone, pincode and name are valid, and
 the product is left exactly as written so a person can review it. The script
 fixes formatting problems. It does not guess intent.
 
-## Assumptions
+## 📌 Assumptions
 
 - **Duplicate lead** means the same phone number. A customer has one lead
   record. If they get in touch again under a different lead_id or a
