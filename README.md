@@ -1,4 +1,4 @@
-Kandi
+# PuREPower Dealer Lead Router
 
 <p align="center">
   <img src="banner.svg" alt="PuREPower Dealer Lead Router" width="100%" />
