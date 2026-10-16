@@ -212,3 +212,9 @@ fixes formatting problems. It does not guess intent.
   assignment's scope and timeline.
 - No AI features were added to the product itself. The assignment asks only
   that AI tool usage be documented in `AI_LOG.md` (Part C).
+
+  ## Links
+
+- Live app: [https://project-0581f3ee-637c-4fd3-b5c.web.app](https://project-0581f3ee-637c-4fd3-b5c.web.app)
+- Demo video: [Watch on Google Drive](https://drive.google.com/file/d/1G3dgIBRpYPLe232aJYuXRcQduwu2kbwe/view?usp=drivesdk)
+- Project summary: [PROJECT_SUMMARY.md](PROJECT_SUMMARY.md)
