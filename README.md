@@ -1,9 +1,7 @@
 Kandi
 
-# PuREPower Dealer Lead Router
-
 <p align="center">
-  <img src="banner.svg" alt="# PuREPower Dealer Lead Router" width="100%" />
+  <img src="banner.svg" alt="PuREPower Dealer Lead Router" width="100%" />
 </p>
 
 <p align="center">
@@ -34,7 +32,7 @@ Practical assignment for the **MIS Assistant** role at PURE Energy.
 
 | Part | What was built |
 |---|---|
-| 🟢 **A. Lead app** | A form that validates name, mobile, pincode, product and source, blocks a mobile number that is already saved, assigns the dealer by pincode, and saves the lead to Firestore. A dashboard shows live counts by status and dealer, with a filter and an inline status editor. |
+| 🟢 **A. Lead app** | A form that validates name, mobile, pincode, product and source, keeps a mobile number that is already saved as a repeat enquiry (flagged, not blocked), assigns the dealer by pincode, and saves the lead to Firestore. A dashboard shows live counts by status and dealer, marks repeat enquiries, and has filters and an inline status editor. |
 | 🔵 **B. Data cleanup** | `scripts/clean-and-import.js` reads all 40 legacy rows, fixes what can be fixed safely, rejects what can't, and writes `reports/reconciliation.csv` with one line per decision. It then imports the dealers and cleaned leads into Firestore. |
 | 🟣 **C. AI log** | `AI_LOG.md` records which AI tools were used, the three most useful prompts, and a time the AI was wrong. |
 | 🟠 **D. Next steps** | `NOTE.md` describes what I would build next for PURE Energy's dealers. |
@@ -109,8 +107,9 @@ submission.json
    ```
    This writes `reports/reconciliation.csv`. If the service account key is
    present it also uploads the `dealers` and `leads` collections. Without the
-   key it runs as a dry run: the data is cleaned and the report is written,
-   but nothing is uploaded.
+   key, or with `--dry-run`, it only cleans the data and writes the report
+   and nothing is uploaded. Leads already in Firestore are left unchanged,
+   so a re-run never resets a status edited on the dashboard.
 
 6. **Run the site locally:**
    ```
@@ -167,8 +166,8 @@ These came from reading all 40 rows, not from guessing:
 | Inconsistent phone formats | `"98480 22 431"`, `"+91-9000012345"` | 🟡 Stripped to a plain 10-digit number |
 | Invalid or too-short phone | `"12345"` (L1009) | 🔴 Row **rejected**: it can't be fixed without contacting the customer |
 | Invalid pincode (4 digits) | `"5000"` (L1012) | 🔴 Row **rejected**: guessing the missing 2 digits risks routing a real customer to the wrong dealer |
-| Duplicate customers (same phone, different lead_id) | Suresh Reddy, Prakash N, Sridevi P, Satish P all appear twice | 🔵 Treated as **one lead per phone number**, the same rule the live form enforces. The later duplicate is **merged** into the first one and not imported as a second record |
-| Reused lead_id (`L1033` used for two different rows) | `L1033` = Mohan Rao, then later `L1033` = Kiran Kumar | 🔵 The second `L1033` row is an exact duplicate of `L1013` (same name, phone, pincode, product, date), so the phone rule **merges** it into `L1013` and the ID clash resolves itself. As a safety net, the script also detects a genuine lead_id clash (same ID, different person) and would reassign an ID like `L1033-DUP`, marked `fixed` with the reason logged |
+| Repeat customers (same phone, different lead_id) | Suresh Reddy, Prakash N, Sridevi P, Satish P all appear twice | 🔵 **Kept.** Each row is imported as its own lead. Rows after the first are flagged `is_repeat`, with `repeat_of` pointing at the first lead and an `enquiry_number`. No enquiry is dropped |
+| Reused lead_id (`L1033` used for two different rows) | `L1033` = Mohan Rao, then later `L1033` = Kiran Kumar | 🔵 The second `L1033` row has the same phone as `L1013`, so it is a repeat enquiry. Because its lead_id is already taken, it is imported as `L1033-DUP` and flagged as a repeat of `L1013`. The reason is logged in the report |
 | Missing name | L1026 (name blank) | 🔴 Row **rejected**: a lead with only a phone number isn't usable as-is |
 | Invalid date | `31/09/2026` (L1018): September has 30 days | 🟡 **Fixed** by clamping to the last real day of that month (`2026-09-30`). The correction is recorded in the reconciliation report so it never changes silently |
 | Inconsistent text casing | `"website"` vs `"Website"`, `"converted "` vs `"Converted"` | 🟡 Trimmed and normalized. Status is Title Case; source is matched to the exact spellings the web form uses (`Website`, `Voice Agent`, `WhatsApp`, `Dealer Walk-in`), so `"WhatsApp"` is not turned into `"Whatsapp"` |
@@ -181,10 +180,10 @@ These came from reading all 40 rows, not from guessing:
 | 🟢 | imported as they were | 26 |
 | 🟡 | fixed | 5 |
 | 🟣 | assigned to In-house Sales | 1 |
-| 🔵 | merged into an existing lead | 5 |
+| 🔵 | repeat enquiry (kept and flagged) | 5 |
 | 🔴 | rejected | 3 |
 
-That leaves **32 leads** in Firestore (40 minus 3 rejected minus 5 merged).
+That leaves **37 leads** in Firestore (40 minus 3 rejected). Earlier versions of this script skipped the 5 repeats and imported 32.
 
 ### 🟠 One issue that was not auto-fixed
 
@@ -200,9 +199,10 @@ fixes formatting problems. It does not guess intent.
 
 ## 📌 Assumptions
 
-- **Duplicate lead** means the same phone number. A customer has one lead
-  record. If they get in touch again under a different lead_id or a
-  misspelled name, it is merged and not treated as a new customer.
+- A **repeat enquiry** means a lead with the same phone number as an earlier
+  lead. It is never rejected or merged. It is saved as its own lead, marked
+  `is_repeat`, and linked to the first lead through `repeat_of`, so every
+  enquiry stays on record and the dashboard can group them by phone number.
 - A pincode is only checked for being 6 digits. It is not checked against a
   real postal-code database, because none was provided.
 - There is no login in this assignment's scope, so the dashboard is
@@ -212,9 +212,3 @@ fixes formatting problems. It does not guess intent.
   assignment's scope and timeline.
 - No AI features were added to the product itself. The assignment asks only
   that AI tool usage be documented in `AI_LOG.md` (Part C).
-
-  ## Links
-
-- Live app: [https://project-0581f3ee-637c-4fd3-b5c.web.app](https://project-0581f3ee-637c-4fd3-b5c.web.app)
-- Demo video: [Watch on Google Drive](https://drive.google.com/file/d/1G3dgIBRpYPLe232aJYuXRcQduwu2kbwe/view?usp=drivesdk)
-- Project summary: [PROJECT_SUMMARY.md](PROJECT_SUMMARY.md)
