@@ -1,0 +1,41 @@
+lead_id,action,reason
+L1001,imported,"clean row, no changes needed"
+L1002,imported,"clean row, no changes needed"
+L1003,imported,"clean row, no changes needed"
+L1004,fixed,minor formatting cleanup (name/status/source casing)
+L1005,imported,"clean row, no changes needed"
+L1006,fixed,minor formatting cleanup (name/status/source casing)
+L1007,imported,"clean row, no changes needed"
+L1008,imported,"clean row, no changes needed"
+L1009,rejected,"invalid phone number ""12345"""
+L1010,imported,"clean row, no changes needed"
+L1011,imported,"clean row, no changes needed"
+L1012,rejected,"invalid pincode ""5000"" (must be 6 digits)"
+L1013,imported,"clean row, no changes needed"
+L1014,imported,"clean row, no changes needed"
+L1015,assigned_inhouse,no dealer covers pincode 110001; routed to In-house Sales
+L1016,imported,"clean row, no changes needed"
+L1017,imported,"clean row, no changes needed"
+L1018,fixed,31/09/2026 is not a real date (month 9 only has 30 days); corrected to 2026-09-30
+L1019,imported,"clean row, no changes needed"
+L1020,fixed,minor formatting cleanup (name/status/source casing)
+L1021,imported,"clean row, no changes needed"
+L1022,imported,"clean row, no changes needed"
+L1023,imported,"clean row, no changes needed"
+L1024,imported,"clean row, no changes needed"
+L1025,imported,"clean row, no changes needed"
+L1026,rejected,missing name
+L1027,imported,"clean row, no changes needed"
+L1028,fixed,minor formatting cleanup (name/status/source casing)
+L1029,imported,"clean row, no changes needed"
+L1030,imported,"clean row, no changes needed"
+L1031,imported,"clean row, no changes needed"
+L1032,imported,"clean row, no changes needed"
+L1033,imported,"clean row, no changes needed"
+L1034,imported,"clean row, no changes needed"
+L1035,imported,"clean row, no changes needed"
+L1036,repeat_enquiry,same phone number as L1003; kept as its own lead and flagged as repeat enquiry #2
+L1037,repeat_enquiry,same phone number as L1010; kept as its own lead and flagged as repeat enquiry #2
+L1038,repeat_enquiry,same phone number as L1031; kept as its own lead and flagged as repeat enquiry #2
+L1039,repeat_enquiry,same phone number as L1007; kept as its own lead and flagged as repeat enquiry #2
+L1033-DUP,repeat_enquiry,"same phone number as L1013; kept as its own lead and flagged as repeat enquiry #2; also: lead_id ""L1033"" was already used by another lead; reassigned to ""L1033-DUP"""
